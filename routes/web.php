@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Models\Product;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlantSearchController;
+use App\Http\Livewire\ProductComments;
 
 Route::get('/', function () {
 
@@ -70,3 +72,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+
+// to add product comment
+Route::get('product-comment',ProductComments::class);

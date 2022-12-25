@@ -1,5 +1,4 @@
 <x-app-layout>
-
     @section('title')
     Plant Marketplace | Info & Guide On {{ $species->common_name }} ({{ $species->scientific_name }})
     @endsection

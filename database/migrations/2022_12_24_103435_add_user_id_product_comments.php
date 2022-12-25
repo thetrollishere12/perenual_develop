@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFbUsers extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFbUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('fb_id')->nullable();
+        Schema::table('product_comments', function (Blueprint $table) {
+            $table->integer('user_id');
         });
     }
 
@@ -25,8 +25,8 @@ class AddFbUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('fb_id');
+        Schema::table('product_comments', function (Blueprint $table) {
+            $table->dropColumn('user_id');
         });
     }
-}
+};
