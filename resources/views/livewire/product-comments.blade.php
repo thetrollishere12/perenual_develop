@@ -6,6 +6,6 @@
         </form>
     @endif
     @foreach ($comments as $item)
-        <livewire:product-parent-comment :comment="$item" key="{{ now() }}"/>
+        <livewire:product-parent-comment :comment="$item"  key="{{ now() }}" :product_id="1" />
     @endforeach
 </div>   

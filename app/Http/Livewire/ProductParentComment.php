@@ -12,8 +12,10 @@ class ProductParentComment extends Component
     public $showCommentBox=false;
     public $likes,$show_edit=false;
     public $editComment;
+    public $product_id;
 
-    public function mount($comment=null){
+    public function mount($comment=null,$product_id){
+        $this->product_id=$product_id;
         $this->comment=$comment;
         $this->likes=$this->comment->productCommentsLikes()->count();
         
@@ -29,7 +31,7 @@ class ProductParentComment extends Component
     
     public function addComment(){
         ProductComment::create([
-            'product_id'=>1,
+            'product_id'=>$this->product_id,
             'comment'=>$this->postComment,
             'parent_id'=>$this->comment->id,
             'user_id'=>auth()->user()->id
