@@ -51,6 +51,14 @@ class ProductParentComment extends Component
         $this->likes=$this->comment->productCommentsLikes()->count();
     }
 
+    public function dislike(){
+        ProductCommentsLikes::where([
+            'product_comment_id'=>$this->comment->id,
+            'user_id'=>auth()->user()->id
+        ])->delete();
+        $this->likes=$this->comment->productCommentsLikes()->count();
+    }
+
     public function removeComment(){
         $comment=ProductComment::where('id',$this->comment->id)->where('user_id',auth()->user()->id);
         $comment_value=$comment->first();

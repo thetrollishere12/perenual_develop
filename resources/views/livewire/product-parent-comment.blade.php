@@ -27,6 +27,8 @@
             <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="$set('showCommentBox',true)">Reply</button>
             @if(!$comment->productCommentsLikes()->where('user_id',auth()->user()->id)->first())
                 <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="like()">Like</button>
+            @else
+                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="dislike()">Dislike</button>  
             @endif 
             @if($comment->user_id==auth()->user()->id)
                 <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="showEdit()">Edit</button>
@@ -46,7 +48,7 @@
 
         @if($comment->childs()->count()>0 && $show_child)
             <div class="pl-5">
-                <livewire:product-comments :product_id="$comment->product_id" :parent_id="$comment->id"  key="{{ now() }}"/>
+                <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id"  key="{{ now() }}"/>
             </div>
         @endif
     </div>

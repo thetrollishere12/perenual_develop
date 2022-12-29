@@ -3,7 +3,7 @@
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlantSearchController;
-use App\Http\Livewire\ProductComments;
+use App\Http\Livewire\PlantSearch\Comment;
 
 Route::get('/', function () {
 
@@ -74,5 +74,5 @@ Route::middleware([
 });
 
 
-// to add product comment
-Route::get('product-comment',ProductComments::class);
+// i have put this url to check i didn't find the url for commment component you can removed it
+Route::get('product-comment',Comment::class);
