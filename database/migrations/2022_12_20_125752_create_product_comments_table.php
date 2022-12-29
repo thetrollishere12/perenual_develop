@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('product_id');
             $table->text('comment');
             $table->integer('parent_id')->nullable();
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
