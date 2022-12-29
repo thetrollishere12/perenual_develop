@@ -74,5 +74,4 @@ Route::middleware([
 });
 
 
-// i have put this url to check i didn't find the url for commment component you can removed it
-Route::get('product-comment',Comment::class);
+
