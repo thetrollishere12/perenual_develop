@@ -2,8 +2,6 @@
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PlantSearchController;
-use App\Http\Livewire\PlantSearch\Comment;
 
 Route::get('/', function () {
 
