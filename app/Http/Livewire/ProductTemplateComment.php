@@ -38,7 +38,7 @@ class ProductTemplateComment extends Component
         ]);
         
         $this->postComment='';
-        $this->show_child=false;
+        // $this->show_child=false;
     }
 
     public function like(){
@@ -81,6 +81,8 @@ class ProductTemplateComment extends Component
         ProductComment::where('id',$this->comment->id)->update([
             'comment'=>$this->editComment
         ]);
-        $this->emit('commentDeleted');
+        $this->show_edit=false;
+        $this->editComment='';
+        $this->comment=ProductComment::find($this->comment->id);
     }
 }

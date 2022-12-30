@@ -7,7 +7,6 @@ use App\Models\ProductComment;
 
 class Comment extends Component
 {
-    protected $listeners=['commentDeleted'=>'render'];
     public $parent_id;
     public $product_id;
     public $show_child;

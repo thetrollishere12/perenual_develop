@@ -15,7 +15,7 @@
             </form>
         @endif
         @foreach ($comments as $item)
-            <livewire:product-template-comment :comment="$item"  key="{{ now() }}" :product_id="$this->product_id" />
+            <livewire:product-template-comment  key="{{ now() }}" :comment="$item" :product_id="$this->product_id" />
         @endforeach
     </div>   
 </div>

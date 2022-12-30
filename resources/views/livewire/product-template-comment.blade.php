@@ -48,7 +48,7 @@
 
         @if($comment->childs()->count()>0 && $show_child)
             <div class="pl-5">
-                <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id"  key="{{ now() }}"/>
+                <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id" key="{{ now() }}">
             </div>
         @endif
     </div>
