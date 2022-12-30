@@ -27,7 +27,8 @@ class ProductComments extends Component
     public function addComment(){
         ProductComment::create([
             'product_id'=>$this->product_id,
-            'comment'=>$this->comment
+            'comment'=>$this->comment,
+            'user_id'=>auth()->user()->id
         ]);
         $this->reset(['comment']);
     }
