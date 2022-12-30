@@ -158,9 +158,8 @@
 
 
         <div>
-            
-            @livewire('plant-search.comment')
-
+            {{-- @livewire('plant-search.comment') --}}
+            <livewire:plant-search.comment :product_id="$species->id"/>
         </div>
 
     </div>

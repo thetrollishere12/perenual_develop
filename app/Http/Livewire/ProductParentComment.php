@@ -83,5 +83,4 @@ class ProductParentComment extends Component
         ]);
         $this->emit('commentDeleted');
     }
-
 }

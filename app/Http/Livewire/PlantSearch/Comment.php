@@ -14,7 +14,7 @@ class Comment extends Component
 
     public $comment;
 
-    public function mount($product_id=1,$parent_id=null){
+    public function mount($product_id,$parent_id=null){
         $this->product_id = $product_id;
         $this->parent_id = $parent_id;
     }
