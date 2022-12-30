@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\ProductComment;
 use App\Models\ProductCommentsLikes;
 
-class ProductParentComment extends Component
+class ProductTemplateComment extends Component
 {
     public $comment,$show_child,$postComment;
     public $showCommentBox=false;
@@ -22,7 +22,7 @@ class ProductParentComment extends Component
     }
     public function render()
     {
-       return view('livewire.product-parent-comment');
+       return view('livewire.product-template-comment');
     }
 
     public function countReplies(){
