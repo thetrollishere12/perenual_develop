@@ -16,7 +16,7 @@
         @endif
         @foreach ($comments as $item)
             {{--parent --}}
-            <livewire:product-template-comment  key="{{ now() }}" :comment="$item" :product_id="$this->product_id" :show_child="$this->show_child"/>
+            <livewire:product-template-comment :comment="$item" :product_id="$this->product_id" :wire:key="$item->id"/>
         @endforeach
     </div>   
 </div>

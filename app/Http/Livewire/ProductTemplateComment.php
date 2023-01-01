@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\ProductComment;
 use App\Models\ProductCommentsLikes;
-use PDO;
+
 
 class ProductTemplateComment extends Component
 {
@@ -14,6 +14,7 @@ class ProductTemplateComment extends Component
     public $likes,$show_edit=false;
     public $editComment;
     public $product_id;
+
 
     public function mount($comment=null,$product_id){
         $this->product_id=$product_id;
@@ -93,7 +94,6 @@ class ProductTemplateComment extends Component
 
     public function setChild(){ 
         $this->show_child=true;
-        if($this->comment->parent_id==NULL) $this->emit('showChildClicked');
     }
 }
 

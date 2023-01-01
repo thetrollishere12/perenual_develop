@@ -47,7 +47,7 @@
                 </div>
             </form>
         @endif     
-        @if(($comment->childs()->count()>0 && $show_child))
+        @if(($comment->childs()->count()>0 && ($show_child)))
             {{--child--}}
             <div class="pl-5">
                 <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id" key="{{ now() }}">      
