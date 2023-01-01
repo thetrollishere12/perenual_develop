@@ -15,7 +15,6 @@ class ProductTemplateComment extends Component
     public $editComment;
     public $product_id;
 
-
     public function mount($comment=null,$product_id){
         $this->product_id=$product_id;
         $this->comment=$comment;
