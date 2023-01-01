@@ -11,12 +11,13 @@
         @if($show_edit==false)
             <p class="text-gray-500">{{$comment->comment}}</p>
         @else
+            @error('editComment') <div>{{$message}}</div> @enderror
             <form wire:submit.prevent="updateComment">
                 <input type="text" wire:model.defer="editComment">
             </form>
         @endif       
         <div class="flex items-center mt-4 space-x-4">
-            <button type="button" wire:click="$set('show_child',true)"
+            <button type="button" wire:click="setChild()"
                 class="flex items-center text-sm text-gray-500 hover:underline">
                 <svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                 Show {{$this->countReplies()}} Replies
@@ -36,6 +37,7 @@
             @endif    
         </div>
         @if($this->showCommentBox==true)
+            @error('postComment') <div>{{$message}}</div> @enderror
             <form class="mt-3" wire:keydown.enter="addComment()">
                 <div class="py-2 px-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
                     <label for="comment" class="sr-only">Your comment</label>
@@ -44,11 +46,11 @@
                         placeholder="Write a comment..." wire:model.defer="postComment"></textarea>
                 </div>
             </form>
-        @endif    
-
-        @if($comment->childs()->count()>0 && $show_child)
+        @endif     
+        @if(($comment->childs()->count()>0 && $show_child))
+            {{--child--}}
             <div class="pl-5">
-                <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id" key="{{ now() }}">
+                <livewire:plant-search.comment :product_id="$comment->product_id" :parent_id="$comment->id" key="{{ now() }}">      
             </div>
         @endif
     </div>

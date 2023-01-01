@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\ProductComment;
 use App\Models\ProductCommentsLikes;
+use PDO;
 
 class ProductTemplateComment extends Component
 {
@@ -18,7 +19,6 @@ class ProductTemplateComment extends Component
         $this->product_id=$product_id;
         $this->comment=$comment;
         $this->likes=$this->comment->productCommentsLikes()->count();
-        
     }
     public function render()
     {
@@ -30,6 +30,9 @@ class ProductTemplateComment extends Component
     }
     
     public function addComment(){
+        $this->validate([
+            'postComment'=>'required'
+        ]);
         ProductComment::create([
             'product_id'=>$this->product_id,
             'comment'=>$this->postComment,
@@ -38,7 +41,6 @@ class ProductTemplateComment extends Component
         ]);
         
         $this->postComment='';
-        // $this->show_child=false;
     }
 
     public function like(){
@@ -69,7 +71,7 @@ class ProductTemplateComment extends Component
             ProductComment::where('parent_id',$comment_value->id)->delete();
         }
         $comment->delete();
-        $this->emit('commentDeleted');
+        $this->emit('commentDeleted');  
     }
 
     public function showEdit(){
@@ -78,6 +80,9 @@ class ProductTemplateComment extends Component
     }
 
     public function updateComment(){
+        $this->validate([
+            'editComment'=>'required'
+        ]);
         ProductComment::where('id',$this->comment->id)->update([
             'comment'=>$this->editComment
         ]);
@@ -85,4 +90,10 @@ class ProductTemplateComment extends Component
         $this->editComment='';
         $this->comment=ProductComment::find($this->comment->id);
     }
+
+    public function setChild(){ 
+        $this->show_child=true;
+        if($this->comment->parent_id==NULL) $this->emit('showChildClicked');
+    }
 }
+

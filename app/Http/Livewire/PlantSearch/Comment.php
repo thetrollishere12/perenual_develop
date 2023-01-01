@@ -7,11 +7,12 @@ use App\Models\ProductComment;
 
 class Comment extends Component
 {
+    protected $listeners=['commentDeleted'=>'render','showChildClicked'=>'setChild'];
+
     public $parent_id;
     public $product_id;
-    public $show_child;
-
     public $comment;
+    public $show_child=false;
 
     public function mount($product_id,$parent_id=null){
         $this->product_id = $product_id;
@@ -30,5 +31,10 @@ class Comment extends Component
             'user_id'=>auth()->user()->id
         ]);
         $this->reset(['comment']);
+        $this->emit('hey');
+    }
+
+    public function setChild(){
+        $this->show_child=true;
     }
 }
