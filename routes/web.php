@@ -42,7 +42,8 @@ Route::post('country','CurrencyController@country');
 
 // Plant Database Search
 Route::get('plant-database-seach-finder','PlantSearchController@index');
-Route::get('plant-database-seach-finder/species/{id}','PlantSearchController@show');
+
+Route::get('plant-database-seach-finder/species/{id}','PlantSearchController@show')->middleware(['auth:sanctum']);
 
 // Plant Database Help Guide
 Route::get('plant-database-seach-guide','PlantSearchController@index_guide');
