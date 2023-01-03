@@ -9,6 +9,7 @@
 
     <div>
         @if($this->parent_id==NULL)
+            @error('comment') <div>{{$message}}</div> @enderror
             <form class="flex flex-col mb-6 w-1/2" wire:submit.prevent="addComment">
                 <label>Add Comment</label>
                 <input type="text" placeholder="Add Comment And Press Enter" wire:model.defer="comment">

@@ -24,6 +24,9 @@ class Comment extends Component
     }
 
     public function addComment(){
+        $this->validate([
+            'comment'=>['required']
+        ]);
         ProductComment::create([
             'product_id'=>$this->product_id,
             'comment'=>$this->comment,
