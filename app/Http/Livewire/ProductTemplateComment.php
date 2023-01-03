@@ -41,6 +41,7 @@ class ProductTemplateComment extends Component
         ]);
         
         $this->postComment='';
+        $this->show_child=true;
     }
 
     public function like(){
