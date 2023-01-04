@@ -19,4 +19,8 @@ class ProductComment extends Model
     public function productCommentsLikes(){
         return $this->hasMany(ProductCommentsLikes::class,'product_comment_id','id');
     }
+
+    public function productReviews(){
+        return $this->hasMany(ProductReview::class,'product_comment_id','id');
+    }
 }
