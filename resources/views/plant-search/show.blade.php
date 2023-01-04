@@ -156,6 +156,19 @@
 
         </div>
 
+        <div>
+            <form action="" class="flex flex-col mb-3 gap-y-2">
+                <label for="">Ratings</label>
+                <input type="text" placeholder="Enter Ratings" class="w-1/2 rounded-lg">
+            </form>
+
+            <div class="flex flex-col mb-3">
+                <label for="">Second Comment</label>
+                <input type="text" placeholder="Enter Second" class="w-1/2 rounded-lg">
+            </div>
+            
+        </div>
+
 
         <div>
             {{-- @livewire('plant-search.comment') --}}

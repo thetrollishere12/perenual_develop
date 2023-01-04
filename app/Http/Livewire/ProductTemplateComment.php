@@ -91,9 +91,5 @@ class ProductTemplateComment extends Component
         $this->editComment='';
         $this->comment=ProductComment::find($this->comment->id);
     }
-
-    public function setChild(){ 
-        $this->show_child=true;
-    }
 }
 
