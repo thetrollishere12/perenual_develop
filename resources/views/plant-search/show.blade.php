@@ -157,7 +157,9 @@
         </div>
 
         <div>
-            {{-- @livewire('plant-search.comment') --}}
+            @if(Auth::guest())
+                <a class="px-4 py-2 bg-green-600 text-white rounded-md cursor-pointer" href="{{route('login')}}">Sign in to Comment</a>
+            @endif    
             <livewire:plant-search.comment :product_id="$species->id"/>
         </div>
 

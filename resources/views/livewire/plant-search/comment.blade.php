@@ -1,4 +1,4 @@
-<div>
+<div class="mt-4">
     {{-- <div>
             
         <x-textarea wire:model="comment" label="Leave Comment" placeholder="Add a tip or comment for this plant" />

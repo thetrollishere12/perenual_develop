@@ -5,7 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\ProductComment;
 use App\Models\ProductCommentsLikes;
-
+use Illuminate\Support\Facades\Auth;
+use PDO;
 
 class ProductTemplateComment extends Component
 {
@@ -30,54 +31,64 @@ class ProductTemplateComment extends Component
     }
     
     public function addComment(){
-        $this->validate([
-            'postComment'=>'required'
-        ]);
-        ProductComment::create([
-            'product_id'=>$this->product_id,
-            'comment'=>$this->postComment,
-            'parent_id'=>$this->comment->id,
-            'user_id'=>auth()->user()->id
-        ]);
-        
-        $this->postComment='';
-        $this->show_child=true;
+        if(Auth::check()){
+            $this->validate([
+                'postComment'=>'required',
+            ]);
+            ProductComment::create([
+                'product_id'=>$this->product_id,
+                'comment'=>$this->postComment,
+                'parent_id'=>$this->comment->id,
+                'user_id'=>auth()->user()->id
+            ]);
+            
+            $this->postComment='';
+            $this->show_child=true;
+        } 
     }
 
     public function like(){
         // adding likes
-        ProductCommentsLikes::create([
-            'product_comment_id'=>$this->comment->id,
-            'likes'=>1,
-            'user_id'=>auth()->user()->id
-        ]);
-        $this->likes=$this->comment->productCommentsLikes()->count();
+        if(Auth::check()){
+            ProductCommentsLikes::create([
+                'product_comment_id'=>$this->comment->id,
+                'likes'=>1,
+                'user_id'=>auth()->user()->id
+            ]);
+            $this->likes=$this->comment->productCommentsLikes()->count();
+        }  
     }
 
     public function dislike(){
-        ProductCommentsLikes::where([
-            'product_comment_id'=>$this->comment->id,
-            'user_id'=>auth()->user()->id
-        ])->delete();
-        $this->likes=$this->comment->productCommentsLikes()->count();
+        if(Auth::check()){
+            ProductCommentsLikes::where([
+                'product_comment_id'=>$this->comment->id,
+                'user_id'=>auth()->user()->id
+            ])->delete();
+            $this->likes=$this->comment->productCommentsLikes()->count();
+        }
     }
 
     public function removeComment(){
-        $comment=ProductComment::where('id',$this->comment->id)->where('user_id',auth()->user()->id);
-        $comment_value=$comment->first();
-        // check if the comment is parent or not 
-        // if parent delete its child also
-        if($comment_value->parent_id==NULL){
-            // get all the child comments
-            ProductComment::where('parent_id',$comment_value->id)->delete();
-        }
-        $comment->delete();
-        $this->emit('commentDeleted');  
+        if(Auth::check()){
+            $comment=ProductComment::where('id',$this->comment->id)->where('user_id',auth()->user()->id);
+            $comment_value=$comment->first();
+            // check if the comment is parent or not 
+            // if parent delete its child also
+            if($comment_value->parent_id==NULL){
+                // get all the child comments
+                ProductComment::where('parent_id',$comment_value->id)->delete();
+            }
+            $comment->delete();
+            $this->emit('commentDeleted');  
+        } 
     }
 
     public function showEdit(){
-        $this->show_edit=true;
-        $this->editComment=$this->comment->comment;
+        if(Auth::check()){
+            $this->show_edit=true;
+            $this->editComment=$this->comment->comment;
+        } 
     }
 
     public function updateComment(){

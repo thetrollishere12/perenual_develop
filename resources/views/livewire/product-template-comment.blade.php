@@ -44,16 +44,19 @@
             <p class="text-gray-500">
                 {{$this->likes}} Likes
             </p>
-            <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="$set('showCommentBox',true)">Reply</button>
-            @if($comment->user_id!=auth()->user()->id && !$comment->productCommentsLikes()->where('user_id',auth()->user()->id)->first())
-                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="like()">Like</button>
-            @elseif($comment->user_id!=auth()->user()->id && $comment->productCommentsLikes()->where('user_id',auth()->user()->id)->first())
-                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="dislike()">Dislike</button>  
-            @endif 
-            @if($comment->user_id==auth()->user()->id)
-                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="showEdit()">Edit</button>
-                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="removeComment()">Delete</button>
-            @endif  
+
+            @if(Auth::check())
+                <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="$set('showCommentBox',true)">Reply</button>
+                @if($comment->user_id!=auth()->user()->id && !$comment->productCommentsLikes()->where('user_id',auth()->user()->id)->first())
+                    <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="like()">Like</button>
+                @elseif($comment->user_id!=auth()->user()->id && $comment->productCommentsLikes()->where('user_id',auth()->user()->id)->first())
+                    <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="dislike()">Dislike</button>  
+                @endif 
+                @if($comment->user_id==auth()->user()->id)
+                    <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="showEdit()">Edit</button>
+                    <button class="flex items-center text-sm text-gray-500 hover:underline" wire:click="removeComment()">Delete</button>
+                @endif
+            @endif      
         </div>    
         @if(($comment->childs()->count()>0 && ($show_child)))
             {{--child--}}
