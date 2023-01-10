@@ -71,14 +71,7 @@ class ProductTemplateComment extends Component
 
     public function removeComment(){
         if(Auth::check()){
-            $comment=ProductComment::where('id',$this->comment->id)->where('user_id',auth()->user()->id);
-            $comment_value=$comment->first();
-            // check if the comment is parent or not 
-            // if parent delete its child also
-            if($comment_value->parent_id==NULL){
-                // get all the child comments
-                ProductComment::where('parent_id',$comment_value->id)->delete();
-            }
+            $comment=ProductComment::where('id',$this->comment->id)->where('user_id',auth()->user()->id)->first();
             $comment->delete();
             $this->emit('commentDeleted');  
         } 
