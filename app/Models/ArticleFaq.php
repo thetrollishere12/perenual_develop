@@ -4,24 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Orchid\Screen\AsSource;
 
-class Article extends Model
+class ArticleFaq extends Model
 {
-    use HasFactory,AsSource;
+    use HasFactory;
 
     /**
      * @var array
      */
     protected $fillable = [
-        'title',
-        'subtitle',
-        'description'
+        'question',
+        'answer',
+        'seen',
+        'helpful',
+        'tags',
+        'image'
     ];
 
     protected $casts = [
-        'subtitle' => 'array',
-        'description' => 'array'
+        'tags' => 'array'
     ];
 
 }

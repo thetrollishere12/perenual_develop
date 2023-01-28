@@ -67,6 +67,13 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
+
+    // Developer
+
+    Route::get('user/developer',function(){
+        return view('profile.user.developer');
+    });
+    
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
