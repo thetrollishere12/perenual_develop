@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\SpecieController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,9 +20,30 @@ use App\Models\Subset;
 |
 */
 
+Route::post('login-user','ApiAuthController@token');
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('species/list', [SpecieController::class, 'index']);
+    Route::get('specie/detail/{id}', [SpecieController::class, 'detail']);
+    Route::get('specie/article-section/{id}', [SpecieController::class, 'articleSection']);
+    Route::get('specie/care-guide/{id}', [SpecieController::class, 'careGuide']);
+    Route::get('specie/comment/{id}', [SpecieController::class, 'comment']);
+    Route::get('specie/comment-review/{id}', [SpecieController::class, 'commentReview']);
+
+
+    Route::get('articles/list', [ArticleController::class, 'index']);
+    Route::get('articles/faq', [ArticleController::class, 'faqs']);
+
+});
+
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
 
 // Route::get('/categories-mysql',function(){
 
