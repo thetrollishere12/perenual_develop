@@ -5,30 +5,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $hot = Product::leftJoin('product_elements','products.id','=','product_elements.product_id')->select('products.*','product_elements.seen')->orderBy('seen','DESC')->limit(15)->get();
-
-    product_details($hot);
-    
-    $new = Product::orderBy('created_at','DESC')->limit(15)->get();
-
-    product_details($new);
-
-    $recently_viewed = [];
-    if (request()->cookie('recently_viewed')) {
-            
-        $id = implode(',',json_decode(request()->cookie('recently_viewed')));
-
-        $recently_viewed = Product::whereIn('id',json_decode(request()->cookie('recently_viewed')))->limit(10)
-        ->orderByRaw("FIELD(id,$id)")
-        ->get();
-
-        product_details($recently_viewed);
-
-    }
 
     // Cookie::queue(Cookie::forget('recently_viewed'));
 
-    return view('welcome',['hot_products'=>$hot,'new_products'=>$new,'recently_viewed'=>$recently_viewed]);
+    return view('welcome');
 });
 
 
