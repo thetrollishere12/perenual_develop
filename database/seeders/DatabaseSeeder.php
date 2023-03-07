@@ -19,8 +19,14 @@ class DatabaseSeeder extends Seeder
         // \App\Models\Subcategory::factory(100)->create();
         // \App\Models\Subset::factory(100)->create();
 
-        \App\Models\Product::factory(100)->create();
-        \App\Models\ProductDetail::factory(30)->create();
-        \App\Models\ProductElement::factory(100)->create();
+        // \App\Models\Product::factory(100)->create();
+        // \App\Models\ProductDetail::factory(30)->create();
+        // \App\Models\ProductElement::factory(100)->create();
+
+        // \App\Models\ArticleFaq::factory(100)->create();
+        // \App\Models\Article::factory(100)->create();
+
+        \App\Models\SpeciesArticleSection::factory(100)->create();
+
     }
 }

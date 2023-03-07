@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Species extends Model
+class SpeciesTropical extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'common_name',
         'scientific_name',
-        'other_name',
         'family',
         'origin',
         'type',
@@ -24,41 +23,18 @@ class Species extends Model
         'flowers',
         'flowering_season',
         'color',
-        'sunlight',
-        'cones',
+        'sun_exposure',
         'fruits',
-        'fruit_color',
         'fruiting_season',
+        'poisonous',
         'growth_rate',
         'maintenance',
         'soil',
         'hardiness',
-        'problem',
         'pest_susceptibility',
+        'other_name',
         'propagation',
-        'poisonous_to_humans',
-        'poisonous_to_pets',
-        'medicinal',
-        'harvest_season',
-        'leaf',
-        'leaf_color',
-        'edible_leaf',
-        'drought_tolerant',
-        'salt_tolerant',
-        'thorny',
-        'invasive',
-        'rare',
-        'tropical',
-        'cuisine',
-        'indoor',
-        'care_level',
-        'description',
-        'copyright_image',
-        'copyright_image2',
-        'description',
-        'image',
-        'default_image',
-        'folder'
+        'image'
     ];
 
     protected $casts = [
@@ -69,11 +45,6 @@ class Species extends Model
         'scientific_name' => 'array',
         'propagation' => 'array',
         'origin' => 'array',
-        'sunlight' => 'array',
-        'image' => 'array',
-        'attracts' => 'array',
-        'fruit_color' => 'array',
-        'leaf_color' => 'array'
     ];
-
+    
 }
