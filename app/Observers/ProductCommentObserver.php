@@ -62,7 +62,7 @@ class ProductCommentObserver
 
     public function deleting(ProductComment $productComment){
         // finding child
-        $child=ProductComment::where('parent_id',$productComment->id)->get();
+        $child=ProductComment::where('parent_id',$productComment->id)->get(); 
         foreach($child as $row){
             $row->delete();
         }

@@ -72,5 +72,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::get('analysis',function(){
+    return view('analysis');
+});
+
 
 
