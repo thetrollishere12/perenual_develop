@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ResultController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,8 @@ Route::middleware([
 Route::get('analysis',function(){
     return view('analysis');
 });
+
+Route::get('result',[ResultController::class,'view']);
 
 
 

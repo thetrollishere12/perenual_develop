@@ -21,6 +21,7 @@
         "orchid/platform": "^13.8",
         "spatie/laravel-sitemap": "^6.2",
         "symfony/intl": "^6.2",
+        "vildanbina/livewire-wizard": "^1.2",
         "wireui/wireui": "^1.17"
     },
     "require-dev": {

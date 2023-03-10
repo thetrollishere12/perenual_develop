@@ -18,7 +18,7 @@ class CreateSpeciesTable extends Migration
 
             $table->string('common_name')->nullable();
 
-            $table->text('scientific_name')->unique()->nullable();
+            $table->text('scientific_name');
 
             $table->text('other_name')->nullable();
 
