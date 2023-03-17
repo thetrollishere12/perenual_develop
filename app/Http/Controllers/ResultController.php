@@ -13,6 +13,7 @@ class ResultController extends Controller
             ->where('watering',$analyze->watering)
             ->where('flowers',$analyze->flower)
             ->where('sunlight','LIKE','%'.$analyze->sunlight.'%')
+            ->where('origin','LIKE','%'.$analyze->location.'%')
             ->where('rare',$analyze->rare)
             ->first();
             return view('result',compact('species'));
