@@ -28,15 +28,5 @@
             @endif
         </div>    
     </div>   
-
-    <style>
-        .button input[type="radio"]:checked + label {
-            background: #20b8be;
-            border-radius: 6px;
-            width: 100px;
-            height: 40px;
-            padding: 4px;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('css/radio-to-button.css')}}">
 </div>

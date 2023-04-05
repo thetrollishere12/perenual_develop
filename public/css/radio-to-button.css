@@ -1,0 +1,8 @@
+.button input[type="radio"]:checked + label {
+    background: #20b8be;
+    border-radius: 6px;
+    width: 100px;
+    height: 40px;
+    padding: 4px;
+    color: white;
+}
