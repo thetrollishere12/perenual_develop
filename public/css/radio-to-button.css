@@ -1,8 +1,37 @@
-.button input[type="radio"]:checked + label {
-    background: #20b8be;
-    border-radius: 6px;
-    width: 100px;
-    height: 40px;
-    padding: 4px;
-    color: white;
+.cat {
+    margin: 4px;
+    background-color: #104068;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    overflow: hidden;
+    width: 8rem;
+}
+
+.cat label {
+    line-height: 3em;
+    width: 8em;
+    height: 3em;
+}
+
+.cat label span {
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+.cat label input {
+    position: absolute;
+    display: none;
+    color: #fff !important;
+}
+/* selects all of the text within the input element and changes the color of the text */
+.cat label input + span {
+    color: #fff;
+}
+
+/*
+  This following statements selects each category individually that contains an input element that is a checkbox and is checked (or selected) and chabges the background color of the span element.
+  */
+input[type="radio"]:checked + span {
+    background-color: #f75a1b;
 }
