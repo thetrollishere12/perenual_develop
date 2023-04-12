@@ -1,24 +1,25 @@
-<div class="container">
-    <div class="grid place-items-center">
-        <div class="w-1/2 space-y-2">  
+<div>
+    <div>
+
+
+        <h1 class="font-bold text-2xl py-8">What type of plant are you looking for?</h1>
+
+
+        <div class="w-full space-y-2">  
             <div class="cat">
                 <label>
                    <input type="radio" id="indoor" value="1" wire:model="state.indoor"><span>Indoor</span>
                 </label>
              </div>
-            <div>     
-                <img src="https://www.floraqueen.com/blog/wp-content/uploads/2016/03/iStock_000059265530_Medium.jpg" alt="flower">
-            </div>    
-            <div class="space-y-2">
-                <x-jet-label for="description" value="{{ __('Description') }}" />
-                <textarea class="rounded-md w-full" rows="4" cols="80" wire:model="state.description"></textarea>
-            </div>
+  
+
+
             <div class="cat">
                 <label>
                    <input type="radio" id="outdoor" value="0" wire:model="state.indoor"><span>Outdoor</span>
                 </label>
             </div> 
-            @if($this->state['indoor']==="0") 
+            @if($this->state['indoor'] === "0") 
                 <div class="mt-4 w-full">
                     <x-jet-label for="location" value="{{ __('Choose Location') }}" />
                     <select wire:model="state.location" class="w-1/2 rounded-md">

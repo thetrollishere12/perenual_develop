@@ -1,6 +1,9 @@
-<div class="flex flex-col justify-center items-center"> 
-    <div class="space-y-4">
-        <p>Choose Sunlight</p>
+<div>
+
+    <h1 class="font-bold text-2xl py-8">Do you live in an area where you get alot of sunlight?</h1>
+
+    <div class="w-full space-y-4">
+
         <div class="cat">
             <label>
                <input type="radio" id="full" value="full" wire:model="state.sunlight"><span>Full Sun</span>

@@ -1,6 +1,8 @@
-<div class="flex flex-col justify-center items-center">
-    <div class="space-y-2">
-        <p>Edible</p>
+<div>
+
+    <h1 class="font-bold text-2xl py-8">Plant is somewhat edible?</h1>
+
+    <div class="w-full space-y-4">
         <div class="cat">
             <label>
                <input type="radio" id="edible_true" value="1" wire:model="state.edible"><span>Yes</span>

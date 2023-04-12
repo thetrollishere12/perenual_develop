@@ -1,6 +1,8 @@
-<div class="flex flex-col justify-center items-center">
-    <div class="space-y-2">
-        <p>Rare</p>
+<div>
+
+    <h1 class="font-bold text-2xl py-8">You like a rare species?</h1>
+
+    <div class="w-full space-y-4">
         <div class="cat">
             <label>
                <input type="radio" id="rare_true" value="1" wire:model="state.rare"><span>Yes</span>
