@@ -30,4 +30,5 @@ class AnalysisWizard extends WizardComponent
     {
         return Analyze::findOrNew($this->analyzeId);
     }
+
 }

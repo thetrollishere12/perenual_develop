@@ -8,13 +8,13 @@ class Indoor extends Step
 {
     // Step view located at resources/views/steps/general.blade.php 
     protected string $view = 'steps.indoor';
-
+    public $validation=true;
     /*
      * Initialize step fields
      */
     public function mount()
     {
-        $this->mergeState([
+            $this->mergeState([
             'indoor'=> $this->model->indoor,
             'location'=>$this->model->location
         ]);
@@ -34,7 +34,7 @@ class Indoor extends Step
      */
     public function validate()
     {
-        return [
+        return ($this->validation)?[
             [
                 'state.indoor'     => ['required'],
                 'state.location'  =>[($this->livewire->state['indoor']==="0")?'required':'nullable']
@@ -44,7 +44,7 @@ class Indoor extends Step
                 'state.indoor'     => __('Indoor'),
                 'state.location'  => __('Location')
             ],
-        ];
+        ]:[];
     }
 
     /*

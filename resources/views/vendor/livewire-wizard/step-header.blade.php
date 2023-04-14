@@ -30,5 +30,5 @@
             />
         </div>
     </div>
-    <div class="text-xs text-center md:text-base">{{ $stepInstance->title() }}</div>
+    <div class="text-xs text-center md:text-base" wire:click="goToNextStep">{{ $stepInstance->title() }}</div>
 </div>
