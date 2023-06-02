@@ -22,6 +22,18 @@ use App\Models\Subset;
 
 Route::post('login-user','ApiAuthController@token');
 
+
+Route::middleware(['throttle:api-request'])->group(function () {
+
+    if (env('API_STATUS') == 'ONLINE') {
+        
+        Route::get('/identity/test','Api\IdentityApiController@OpenAI');
+
+    }
+
+});
+
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('species/list', [SpecieController::class, 'index']);
     Route::get('specie/detail/{id}', [SpecieController::class, 'detail']);

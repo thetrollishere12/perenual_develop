@@ -19,6 +19,9 @@
                    <input type="radio" id="outdoor" value="0" wire:model="state.indoor"><span>Outdoor</span>
                 </label>
             </div> 
+
+            
+            
             @if($this->state['indoor'] === "0") 
                 <div class="mt-4 w-full">
                     <x-jet-label for="location" value="{{ __('Choose Location') }}" />
