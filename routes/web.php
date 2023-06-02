@@ -13,6 +13,9 @@ Route::get('/', function () {
 });
 
 
+Route::get('docs/identify/api','ApiDocsController@identify');
+
+
 // Currency
 
 Route::post('currency','CurrencyController@currency');
