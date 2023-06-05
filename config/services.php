@@ -51,4 +51,14 @@ return [
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' => env('FACEBOOK_REDIRECT')
     ],
+
+    'plantid' => [
+        'api_key'  => env('PLANTID_API_KEY'),
+        'base_url' => env('PLANTID_BASE_URL'),
+    ],
+
+    'plantnet' => [
+        'api_key'  => env('PLANTNET_API_KEY'),
+        'base_url' => env('PLANTNET_BASE_URL'),
+    ],
 ];
