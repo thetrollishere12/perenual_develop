@@ -7,7 +7,7 @@ use App\Models\SearchQuery;
 use WireUi\Traits\Actions;
 
 class SearchInput extends Component
-{   
+{
     use Actions;
     public $search;
     public $class;

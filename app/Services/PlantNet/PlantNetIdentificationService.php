@@ -2,9 +2,11 @@
 
 namespace App\Services\PlantNet;
 
+use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class PlantIdentificationService
+class PlantNetIdentificationService
 {
     protected string $base_url;
     protected string $api_key;
@@ -30,6 +32,8 @@ class PlantIdentificationService
                 'images' => [$imageUrl],
                 'lang' => 'en'
             ])->withHeaders($this->header);
+
+            Log::info("Plant Net Raw Response:  ". json_encode($response));
 
             $result = $response->json();
             if ($response->clientError() || $response->serverError()) {
@@ -123,29 +127,6 @@ class PlantIdentificationService
 
     protected function handleError($result): array
     {
-//        400
-        //Bad Request
-        //
-        //401
-        //Unauthorized
-        //
-        //404
-        //Species Not Found
-        //
-        //413
-        //Payload Too Large
-        //
-        //414
-        //URI Too Long
-        //
-        //415
-        //Unsupported Media Type
-        //
-        //429
-        //Too Many Requests
-        //
-        //500
-        //Internal Server Error
-        return [];
+        throw new Exception($result);
     }
 }

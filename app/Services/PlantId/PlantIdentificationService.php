@@ -2,6 +2,7 @@
 
 namespace App\Services\PlantId;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -38,12 +39,13 @@ class PlantIdentificationService
 
             $result = $response->json();
             if ($response->clientError() || $response->serverError()) {
-                return $this->handleError($result);
+                return $this->handleError($response->body());
             }
 
             // Process the result and return the identified plant information
             return $this->processResult($result);
         } catch (\Exception $e) {
+            Log::error("Wahala:  ". json_encode($e));
             // Handle any errors that occur during the identification process
             return $this->handleError($e);
         }
@@ -66,11 +68,11 @@ class PlantIdentificationService
         ];
     }
 
-    protected function handleError($result): array
+    protected function handleError($result)
     {
-        Log::error("Plant ID API Error Response :  ". json_encode($result));
+        Log::error("Plant ID API Error Response :  ". $result);
 
-        return [];
+        throw new Exception($result);
     }
 
     protected function encodeImageToBase64(string $imageUrl): string
