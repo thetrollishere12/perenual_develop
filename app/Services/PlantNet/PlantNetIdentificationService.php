@@ -18,7 +18,7 @@ class PlantNetIdentificationService
         $this->base_url = config('services.plantnet.base_url');
 
         $this->header = [
-//            'Api-Key' => $this->api_key,
+           'Api-Key' => $this->api_key,
             'Content-Type' => 'application/json',
         ];
     }
@@ -26,18 +26,16 @@ class PlantNetIdentificationService
     public function identifyPlant(string $imageUrl): array
     {
         try {
-            $response = Http::post("{$this->base_url}/v2/identify/all", [
-                'api-key' => $this->api_key,
-                'organs' => ['auto'],
-                'images' => [$imageUrl],
-                'lang' => 'en'
-            ])->withHeaders($this->header);
-
-            Log::info("Plant Net Raw Response:  ". json_encode($response));
+            $response = Http::withHeaders($this->header)
+                            ->attach('images[]', fopen($imageUrl, 'r'))
+                            ->attach('organs[]', 'auto')
+                            ->post(
+                                "{$this->base_url}/v2/identify/all?api-key={$this->api_key}&lang=en",
+                            );
 
             $result = $response->json();
             if ($response->clientError() || $response->serverError()) {
-                return $this->handleError($result);
+                return $this->handleError($response->body());
             }
 
             // Process the result and return the identified plant information
@@ -50,67 +48,6 @@ class PlantNetIdentificationService
 
     protected function processResult($result)
     {
-//        {
-//            "query": {
-//            "project": "string",
-//            "images": [
-//                        "string"
-//                    ],
-//            "organs": [
-//                        "string"
-//                    ],
-//            "includeRelatedImages": true
-//          },
-//          "language": "string",
-//          "preferedReferential": "string",
-//          "switchToProject": "string",
-//          "bestMatch": "string",
-//          "results": [
-//            {
-//                "score": 0,
-//              "species": {
-//                "scientificNameWithoutAuthor": "string",
-//                "scientificNameAuthorship": "string",
-//                "scientificName": "string",
-//                "genus": {
-//                    "scientificNameWithoutAuthor": "string",
-//                  "scientificNameAuthorship": "string",
-//                  "scientificName": "string"
-//                },
-//                "family": {
-//                    "scientificNameWithoutAuthor": "string",
-//                  "scientificNameAuthorship": "string",
-//                  "scientificName": "string"
-//                },
-//                "commonNames": [
-//                    "string"
-//                ]
-//              },
-//              "images": [
-//                {
-//                    "organ": "string",
-//                  "author": "string",
-//                  "license": "string",
-//                  "date": {
-//                    "timestamp": 0,
-//                    "string": "string"
-//                  },
-//                  "citation": "string",
-//                  "url": {
-//                    "o": "string",
-//                    "m": "string",
-//                    "s": "string"
-//                  }
-//                }
-//              ],
-//              "gbif": {
-//                "id": 0
-//              }
-//            }
-//          ],
-//          "remainingIdentificationRequests": 0,
-//          "version": "string"
-//        }
         // Extract the relevant information from the result and return it
         // For example, you can access the identified plant's common name and scientific name like this:
         Log::info("PlantNet API Result: ".json_encode($result));
@@ -122,11 +59,14 @@ class PlantNetIdentificationService
         return [
             'common_name' => $commonName,
             'scientific_name' => $scientificName,
+            'probability' => $probability
         ];
     }
 
-    protected function handleError($result): array
+    protected function handleError($result)
     {
+        Log::error("PlantNet API Error: ".json_encode($result));
+
         throw new Exception($result);
     }
 }

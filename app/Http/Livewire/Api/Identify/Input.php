@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Api\Identify;
 
 use App\Services\PlantId\PlantIdentificationService;
+use App\Services\PlantNet\PlantNetIdentificationService;
 use Exception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -35,6 +36,7 @@ class Input extends Component
 
         // Resolve the PlantIdentificationService from the service container
         $plantIDService = app(PlantIdentificationService::class);
+        $plantNetService = app(PlantNetIdentificationService::class);
 
         try {
             // Call the PlantID SDK
