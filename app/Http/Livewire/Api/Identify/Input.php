@@ -19,6 +19,7 @@ class Input extends Component
 
 
     public $image;
+    // public $images;
     public $summary = [];
 
     public function updated()
@@ -27,12 +28,23 @@ class Input extends Component
         $this->validate([
             'image' => 'image|max:10240', // 10MB Max
         ]);
-
         // store the image in the database
         $path = $this->image->store('images');
-
         $relative_url = Storage::url($path);
         $image_url = URL::to($relative_url);
+
+        // Uncomment this part for multiple image support on the input component >>>>>>
+        // $this->validate([
+        //     'images.*' => 'image|max:10240', // 10MB Max for each image
+        // ]);
+        // $imageUrls = [];
+        // foreach ($this->images as $image) {
+        //     $path = $image->store('images');
+        //     $relativeUrl = Storage::url($path);
+        //     $imageUrl = URL::to($relativeUrl);
+        //     $imageUrls[] = $imageUrl;
+        // }
+        // <<<<<<<
 
         // Resolve the PlantIdentificationService from the service container
         $plantIDService = app(PlantIdentificationService::class);
