@@ -40,8 +40,8 @@ class Input extends Component
 
         try {
             // Call the PlantID SDK
-            $this->summary = $plantNetService->identifyPlant($image_url);
-            // $this->summary = $plantIDService->identifyPlant($image_url);
+            // $this->summary = $plantNetService->identifyPlant([$image_url]);
+            $this->summary = $plantIDService->identifyPlant([$image_url]);
 
         } catch(Exception $ex) {
             dd($ex->getMessage());

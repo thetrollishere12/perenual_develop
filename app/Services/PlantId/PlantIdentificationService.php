@@ -23,15 +23,18 @@ class PlantIdentificationService
         ];
     }
 
-    public function identifyPlant(string $imageUrl): array
+    public function identifyPlant(array $imageUrls): array
     {
         try {
-            $base64Image = $this->encodeImageToBase64($imageUrl);
+            $imageEncodings = collect($imageUrls)->map(function($imageUrl) {
+                $base64Image = $this->encodeImageToBase64($imageUrl);
+                return $base64Image;
+            });
 
             $response = Http::withHeaders($this->header)->post(
                 "{$this->base_url}/v2/identify",
                 [
-                    "images"            => [$base64Image],
+                    "images"            => $imageEncodings,
                     "modifiers"         => ["crops_fast", "similar_images"],
                     "plant_language"    => "en",
                 ]

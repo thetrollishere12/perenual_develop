@@ -27,15 +27,18 @@ class PlantNetIdentificationService
         ];
     }
 
-    public function identifyPlant(string $imageUrl): array
+    public function identifyPlant(array $imageUrls): array
     {
         try {
-            $response = Http::withHeaders($this->header)
-                            ->attach('images', file_get_contents($imageUrl), 'image_1.jpeg')
-                            ->attach('organs', 'auto')
-                            ->post(
-                                "{$this->base_url}/v2/identify/all?api-key={$this->api_key}&lang=en",
-                            );
+            $request = Http::withHeaders($this->header)->attach('organs', 'auto');
+
+            foreach ($imageUrls as $index => $imageUrl) {
+                $request->attach('images', file_get_contents($imageUrl), "image_{$index}.jpeg");
+            }
+
+            $response = $request->post(
+                "{$this->base_url}/v2/identify/all?api-key={$this->api_key}&lang=en",
+            );
 
             $result = $response->json();
             if ($response->clientError() || $response->serverError()) {
