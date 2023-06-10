@@ -30,10 +30,11 @@ class PlantNetIdentificationService
     public function identifyPlant(array $imageUrls): array
     {
         try {
-            $request = Http::withHeaders($this->header)->attach('organs', 'auto');
+            $request = Http::withHeaders($this->header);
 
             foreach ($imageUrls as $index => $imageUrl) {
                 $request->attach('images', file_get_contents($imageUrl), "image_{$index}.jpeg");
+                $request->attach('organs', 'auto');
             }
 
             $response = $request->post(
