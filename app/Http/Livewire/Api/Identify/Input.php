@@ -52,8 +52,17 @@ class Input extends Component
 
         try {
             // Call the PlantID SDK
-            // $this->summary = $plantNetService->identifyPlant([$image_url]);
-            $this->summary = $plantIDService->identifyPlant([$image_url], ["plant_language" => "fr"]);
+            $optionalParameters = [
+                'include-related-images' => true,
+                'no-reject' => false,
+                'type' => 'kt',
+                'lang' => 'fr',
+                'organ' => []
+            ];
+            $this->summary = $plantNetService->identifyPlant([$image_url], $optionalParameters);
+
+            // $this->summary = $plantIDService->identifyPlant([$image_url], ["plant_language" => "fr"]);
+            dd($this->summary);
 
         } catch(Exception $ex) {
             dd($ex->getMessage());
