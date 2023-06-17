@@ -31,10 +31,10 @@ class PlantIdentificationService
      *                       Possible options:
      *                       - latitude (float): Geographic coordinate to increase identification accuracy.
      *                       - longitude (float): Geographic coordinate to increase identification accuracy.
-     *                       - modifiers (array): List of strings that influence the identification process and results.
-     *                       - plant_details (array): List of strings that determines the included information about the plant.
-     *                       - plant_language (string): Language code (ISO 639-1) used for language-dependent plant details.
-     *                       - plant_languages (array): List of up to 3 language codes (ISO 639-1) for language-dependent plant details.
+     *                       - modifiers (array): List of strings that influence the identification process and results. e.g. ["crops_fast", "similar_images"] More Info: https://github.com/flowerchecker/Plant-id-API/wiki/Modifiers
+     *                       - plant_details (array): List of strings that determines the included information about the plant. e.g ["common_names", "taxonomy", "url"] More Info: https://github.com/flowerchecker/Plant-id-API/wiki/Plant-details
+     *                       - plant_language (string): Language code (ISO 639-1) used for language-dependent plant details. e.g. "en"
+     *                       - plant_languages (array): List of up to 3 language codes (ISO 639-1) for language-dependent plant details. e.g. ["en", "fr"]
      *                       - custom_id (int): Unique identifier for your purpose.
      *                       - datetime (int): Timestamp in seconds.
      *                       - identification_timeout (int): Timeout limit in seconds for the identification process.
