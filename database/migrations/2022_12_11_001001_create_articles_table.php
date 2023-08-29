@@ -15,16 +15,20 @@ class CreateArticlesTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->integer('publish_id')->nullable();
 
-            $table->string('unique_code')->unique();
-            
-            $table->string('main_image')->nullable();
+            $table->integer('parent_id')->nullable();
+
+            $table->text('main_image')->nullable();
+            $table->text('image_path')->nullable();
+
             $table->string('title')->nullable();
-            $table->longText('subtitle');
-            $table->longText('description');
-            $table->string('sub_image')->nullable();
+            $table->longText('description')->nullable();
+
+            $table->longText('tags');
             $table->integer('seen')->default(0);
             $table->integer('helpful')->default(0);
+            
             $table->timestamps();
         });
     }

@@ -2,13 +2,34 @@
 
 namespace App\Steps;
 
-use App\Models\Analyze;
+use App\Models\Survey;
 use Vildanbina\LivewireWizard\Components\Step;
 
 class Rare extends Step
 {
     // Step view located at resources/views/steps/general.blade.php 
-    protected string $view = 'steps.rare';
+    protected string $view = 'survey.steps.component.array';
+
+    public $array = [
+        [
+            'label'=>'Yes I do ✨',
+            'value'=>1
+        ],
+        [
+            'label'=>'No thanks ❌',
+            'value'=>0
+        ]
+    ];
+
+    public function survey_title(): string
+    {
+        return __('Do you want something rare?');
+    }
+
+    public function name(): string
+    {
+        return __('rare');
+    }
 
     /*
      * Initialize step fields
@@ -27,21 +48,6 @@ class Rare extends Step
     {
         return 'check';
     }
-
-
-    /*
-     * When Wizard Form has submitted
-     */
-    public function save($state)
-    {
-    
-        $data=Analyze::updateOrCreate([
-            'id'=>$this->model->id
-        ],$state);
-
-        return redirect()->to('result')->with('analyze',$data);
-    }
-
 
     /*
      * Step Validation

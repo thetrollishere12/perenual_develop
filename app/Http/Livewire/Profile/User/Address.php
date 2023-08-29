@@ -6,7 +6,7 @@ use Livewire\Component;
 use Auth;
 use App\Models\Address as Addresses;
 use WireUi\Traits\Actions;
-use File;
+use Storage;
 
 class Address extends Component
 {
@@ -22,7 +22,7 @@ class Address extends Component
     use Actions;
     protected $listeners = ['refreshComponent' => '$refresh'];
     public function mount(){
-        $this->json = json_decode(File::get(public_path('storage/json/country.json')), true);
+        $this->json = json_decode(Storage::disk('local')->get('json/country.json'), true);
 
         $this->country = $this->json[0]['code'];
         $this->state_county_province_region = $this->json[0]['states'][0];

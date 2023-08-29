@@ -11,6 +11,7 @@ class SpeciesComment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'species_id',
         'scientific_name',
         'parent_id',
         'comment',

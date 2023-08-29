@@ -10,6 +10,7 @@ class SpeciesCommentReview extends Model
     use HasFactory;
 
     protected $fillable = [
+        'species_id',
         'scientific_name',
         'species_comment_id',
         'user_id',

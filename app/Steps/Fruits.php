@@ -7,8 +7,24 @@ use Vildanbina\LivewireWizard\Components\Step;
 class Fruits extends Step
 {
     // Step view located at resources/views/steps/general.blade.php 
-    protected string $view = 'steps.fruits';
+    protected string $view = 'survey.steps.component.array';
 
+    public $array = [
+        [
+            'label'=>'Yes, I want a plant that drops goodies 🍒🍎🍈',
+            'value'=>1
+        ],
+        [
+            'label'=>'No goodies ❌',
+            'value'=>0
+        ]
+    ];
+
+    public function survey_title(): string
+    {
+        return __('Would you like some fruits?');
+    }
+    
     /*
      * Initialize step fields
      */
@@ -39,7 +55,7 @@ class Fruits extends Step
             ],
             [],
             [
-                'state.fruits'     => __('Fruits'),
+                'state.fruits'     => __('fruits'),
             ],
         ];
     }
@@ -51,4 +67,10 @@ class Fruits extends Step
     {
         return __('Fruits');
     }
+
+    public function name(): string
+    {
+        return __('fruits');
+    }
+    
 }

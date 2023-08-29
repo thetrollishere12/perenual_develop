@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Models\ApiCredentialKey;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
@@ -27,6 +28,7 @@ class UserListLayout extends Table
     public function columns(): array
     {
         return [
+            TD::make('id', 'ID')->sort(),
             TD::make('name', __('Name'))
                 ->sort()
                 ->cantHide()
@@ -44,6 +46,34 @@ class UserListLayout extends Table
                     ->asyncParameters([
                         'user' => $user->id,
                     ])),
+
+            TD::make('email_verified_at', 'Verified')
+                ->sort()
+                ->render(function(User $user){
+
+                    if ($user->email_verified_at) {
+                        return $user->email_verified_at->toDateTimeString();
+                    }
+
+                }),
+
+            TD::make('Subscription')
+                ->sort()
+                ->render(function(User $user){
+
+                    if (is_subscribed($user->id)->count() > 0) {
+                        return "Subscribed";
+                    }
+
+                }),
+
+            TD::make('API Key')
+                ->sort()
+                ->render(function(User $user){
+
+                    return ApiCredentialKey::where('user_id',$user->id)->get()->value('key');
+
+                }),
 
             TD::make('updated_at', __('Last edit'))
                 ->sort()

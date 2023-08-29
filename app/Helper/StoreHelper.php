@@ -17,6 +17,9 @@ use Symfony\Component\Intl\Currencies;
 
 use App\Models\BankBalance;
 
+use App\Models\EtsyAccount;
+use App\Models\User;
+
 function valid_store(){
 
 	$store = Store::where('user_id',Auth::id())->get();
@@ -26,6 +29,18 @@ function valid_store(){
     }else{
         return false;
     }
+
+}
+
+function get_store_3rd_party_rating($store,$id){
+
+    $store_f = Store::where('id',$id)->first();
+    $etsy = EtsyAccount::where('userId',$store_f->user_id)->first();
+    if ($etsy) {
+        $store->third_party_ratings_count = $etsy->review_count;
+        $store->third_party_ratings = $etsy->review_average;
+    }
+
 
 }
 
@@ -201,6 +216,7 @@ function product_details($products){
 
         if ($products[$key]->store) {
             get_store_rating($products[$key]->store,$value->store_id);
+            get_store_3rd_party_rating($products[$key]->store,$value->store_id);
             $products[$key]->shipping = check_if_free_shipping($value->shippingMethod);
         }else{
             $products->forget($key);

@@ -13,16 +13,23 @@ use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Cashier\Billable;
 
+use App\Models\ApiCredentialKey;
+use App\Models\InstagramConnectedAccount;
+
+use Orchid\Metrics\Chartable;
+
+use Orchid\Filters\Filterable;
+
 class User extends Authenticatable
 {
-
+    use Chartable;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use HasTeams;
     use TwoFactorAuthenticatable;
     use Notifiable, Billable;
-
+    use Filterable;
     /**
      * The attributes that are mass assignable.
      *
@@ -71,6 +78,7 @@ class User extends Authenticatable
         'email',
         'permissions',
         'profile_photo_url',
+        'email_verified_at',
     ];
 
     /**
@@ -84,5 +92,23 @@ class User extends Authenticatable
         'email',
         'updated_at',
         'created_at',
+        'email_verified_at',
     ];
+
+    public function api_key(){
+        return $this->hasOne(ApiCredentialKey::class,'user_id','id');
+    }
+
+    public function connected_instagram(){
+        return $this->hasMany(InstagramConnectedAccount::class,'user_id','id');
+    }
+
+    public function connected_etsy(){
+        return $this->hasMany(EtsyAccount::class,'userId','id');
+    }
+
+    public function store(){
+        return $this->hasOne(Store::class,'user_id','id');
+    }
+
 }

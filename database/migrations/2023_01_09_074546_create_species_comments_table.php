@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('parent_id')->nullable();
-            $table->string('scientific_name');
+            $table->string('scientific_name')->nullable();
             $table->text('comment');
             $table->longText('user_like')->default('[]');
             $table->timestamps();

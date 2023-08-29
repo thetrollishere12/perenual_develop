@@ -56,7 +56,7 @@ function process_order($method,$payment_id){
         $cus_order->payment_id = $payment_id;
         $cus_order->save();
 
-        foreach (session('cart.shopping_cart') as $key => $cart) {
+        foreach (session('checkoutCart.shopping_cart') as $key => $cart) {
 
             $order_num = random_id('O_');
 
@@ -178,10 +178,10 @@ function payment_success($data){
     }
 
     if (env('APP_STATUS') == "production") {
-        Mail::to('brandonsanghuynh123@gmail.com')->send(new OrderConfirm($data));
+        Mail::to(env('ALTERNATIVE_MAIL_CONTACT_ADDRESS'))->send(new OrderConfirm($data));
     }
 
-    redeem_promo(session('cart.coupon_code_applied.coupon_code'));
+    redeem_promo(session('checkoutCart.coupon_code_applied.coupon_code'));
 
     // session()->put('order_num',$order_num);
 

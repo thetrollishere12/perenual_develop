@@ -16,12 +16,26 @@ return new class extends Migration
         Schema::create('species_issues', function (Blueprint $table) {
             $table->id();
 
-            $table->string('image')->nullable();
+            $table->string('type')->nullable();
+            $table->string('common_name');
+            $table->longText('scientific_name')->nullable();
+            $table->longText('other_name')->nullable();
+            $table->string('family')->nullable();
+            $table->longText('description')->nullable();
 
-            $table->string('name');
-            $table->longText('description');
+            $table->longText('effect')->default('[]')->nullable();
 
-            $table->longText('solution');
+            $table->longText('solution')->default('[]')->nullable();
+            $table->longText('host')->nullable();
+
+            $table->text('copyright_images')->nullable();
+            $table->text('image')->nullable();
+            
+
+            $table->text('default_image')->nullable();
+
+            $table->text('folder')->nullable();
+            
 
             $table->integer('seen')->default(0);
             $table->integer('helpful')->default(0);

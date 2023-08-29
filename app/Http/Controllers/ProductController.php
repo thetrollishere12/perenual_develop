@@ -14,7 +14,9 @@ use Storage;
 use App\Models\Store;
 use App\Models\ProductDimension;
 
-use App\Models\ShippingDomestic;
+use App\Models\ProductDetail;
+use App\Models\ProductElement;
+use App\Models\ProductReview;
 
 class ProductController extends Controller
 {
@@ -79,16 +81,13 @@ class ProductController extends Controller
     public function destroy($id)
     {
 
-        $product = Product::limit(1)->where('id',$id)->where('store_id',get_store()->first()->id)->first();
+        $product = Product::limit(1)->where('id',$id)->where('store_id',get_store()->first()->id)->delete();
 
-        if ($product) {
-            $product->delete();
+        ProductDetail::where('product_id',$id)->delete();
+        ProductDimension::where('product_id',$id)->delete();
+        ProductElement::where('product_id',$id)->delete();
+        Storage::disk('public')->deleteDirectory('marketplace/'.$id);
 
-            Storage::disk('public')->deleteDirectory('marketplace/'.$product->id);
-
-        }else{
-
-        }
     }
 
     public function success(){
@@ -101,6 +100,18 @@ class ProductController extends Controller
             return redirect('user/shop/product/create');
         }
         
+    }
+
+    public function import_product(){
+
+        return view('profile.shop.import_products');
+
+    }
+
+    public function create_etsy($id){
+
+        return view('profile.product.create-etsy',['id'=>$id]);
+
     }
 
 }

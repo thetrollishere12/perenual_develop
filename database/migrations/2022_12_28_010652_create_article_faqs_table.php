@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('article_faqs', function (Blueprint $table) {
             $table->id();
+            $table->integer('publish_id')->nullable();
             $table->string('article_code')->nullable();
             // $table->string('common_name')->nullable();
             $table->text('image')->nullable();
+            $table->text('image_path')->nullable();
             $table->string('question');
             $table->longText('answer');
             $table->longText('tags')->nullable();

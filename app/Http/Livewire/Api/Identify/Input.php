@@ -7,7 +7,7 @@ use Livewire\WithFileUploads;
 use Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Http;
-
+use Auth;
 
 
 class Input extends Component
@@ -17,22 +17,32 @@ class Input extends Component
 
 
     public $image;
+    public $key;
+    public $result = [];
+
+    public function mount(){
+
+        $this->key = "[YOUR-API-KEY]";
+
+        if (Auth::user() && Auth::user()->api_key()->first()) {
+            $this->key = Auth::user()->api_key()->first()->key;
+        }
+
+    }
 
     public function updated()
     {   
 
         $this->validate([
-            'image' => 'image|max:10240', // 10MB Max
+            'image.*' => 'image|max:10240', // 10MB Max
         ]);
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Api-Key' => env('PLANTID_KEY'),
-        ])->post('https://api.plant.id/v2/identify', [
-            'images' => base64_encode(file_get_contents($this->image->getRealPath())),
-        ]);
+        $url = [];
+        foreach ($this->image as $image) {
+            $url[] = $image->store('species_identify');
+        }
 
-        dd(json_decode($response->body()));
+        $this->result = plantIdentify($url,null);
 
     }
 

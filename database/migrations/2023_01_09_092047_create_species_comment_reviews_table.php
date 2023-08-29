@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('species_comment_id')->constrained('species_comments')->onDelete('cascade');
             $table->integer('user_id');
             $table->integer('ratings');
-            $table->string('scientific_name');
+            $table->string('scientific_name')->nullable();
             $table->timestamps();
         });
     }

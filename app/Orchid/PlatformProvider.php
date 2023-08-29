@@ -42,6 +42,16 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('list')
                 ->route('platform.product.list'),
 
+            Menu::make(__('Plants'))
+                ->icon('star')
+                ->route('platform.species.plant.list')
+                ->title(__('Species')),
+
+            Menu::make(__('Article FAQ'))
+                ->icon('question')
+                ->route('platform.article.faq.list')
+                ->title(__('Articles')),
+
             Menu::make('Faq')
                 ->icon('question')
                 ->route('platform.faq.list')
@@ -104,6 +114,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->permission('platform.systems.users')
                 ->title(__('Access rights')),
 
+            Menu::make(__('General Charts'))
+                ->icon('user')
+                ->route('platform.general.chart')
+                ->permission('platform.systems.users'),
+
             Menu::make(__('Roles'))
                 ->icon('lock')
                 ->route('platform.systems.roles')
@@ -132,6 +147,27 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group(__('Publisher'))
+                ->addPermission('platform.article.article', __('Article'))
+                ->addPermission('platform.article.faq', __('Faq')),
+                
+            ItemPermission::group(__('Instagram Social Media'))
+                ->addPermission('platform.socialmedia.instagram.manager', __('Manager'))
+                ->addPermission('platform.socialmedia.instagram.creator', __('Creator')),
+
+            ItemPermission::group(__('Reddit Social Media'))
+                ->addPermission('platform.socialmedia.reddit.manager', __('Manager')),
+
+            ItemPermission::group(__('Sales/Spokes'))
+                ->addPermission('platform.sales_spokes', __('Sales/Spokes')),
+
+            ItemPermission::group(__('Developer'))
+                ->addPermission('platform.developer', __('Developer')),
+
+            ItemPermission::group(__('Species Editor'))
+                ->addPermission('platform.species', __('Species Editor')),
+
         ];
     }
 }

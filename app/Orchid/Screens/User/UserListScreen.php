@@ -15,6 +15,8 @@ use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
+use App\Models\ApiCredentialKey;
+
 class UserListScreen extends Screen
 {
     /**
@@ -128,7 +130,7 @@ class UserListScreen extends Screen
     public function remove(Request $request): void
     {
         User::findOrFail($request->get('id'))->delete();
-
+        ApiCredentialKey::where('user_id',$request->get('id'))->delete();
         Toast::info(__('User was removed'));
     }
 }

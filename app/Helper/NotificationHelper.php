@@ -31,7 +31,7 @@ function ProductPurchase($data){
 	if ($data->user) {
         $data->user->notify(new ProductPurchaseNotification($data));
     }else{
-        Notification::route('mail', session('cart.address.email_address'))->notify(new ProductPurchaseNotification($data));
+        Notification::route('mail', session('checkoutCart.user.email_address'))->notify(new ProductPurchaseNotification($data));
     }
 }
 

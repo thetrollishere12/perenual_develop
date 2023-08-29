@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('seller_id')->nullable();
             $table->string('plant_id');
-            $table->string('species')->nullable();
+            $table->string('common_name')->nullable();
+            $table->longText('species')->nullable();
             $table->string('season')->nullable();
             $table->string('name');
             $table->string('default_image');
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->integer('seen')->default(0);
             $table->integer('likes')->default(0);
             $table->integer('update_request')->default(0);
+            $table->longText('attributes')->nullable();
             $table->timestamps();
         });
     }

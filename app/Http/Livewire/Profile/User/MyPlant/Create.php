@@ -10,6 +10,7 @@ use App\Models\MyPlant;
 use WireUi\Traits\Actions;
 use Auth;
 use Redirect;
+use App\Models\Species;
 
 class Create extends Component
 {
@@ -34,9 +35,9 @@ class Create extends Component
 
         if ($this->plant) {
 
-            foreach(Storage::disk('public')->files($this->plant['image']) as $img){
+            foreach(Storage::disk('public')->files($this->plant['image'].'/og') as $img){
                 $this->displayImage[] = [
-                    "displayUrl" => Storage::disk('public')->url($this->plant['image'].'thumbnail/'.basename($img)),
+                    "displayUrl" => Storage::disk('public')->url($this->plant['image'].'og/'.basename($img)),
                     "url" => Storage::disk('public')->url($img),
                     "name" => basename($img),
                     "original_name" => basename($img),
@@ -47,7 +48,7 @@ class Create extends Component
 
 
             $this->name = $this->plant['name'];
-            $this->species = $this->plant['species'];
+            $this->species = json_encode($this->plant['species']);
             $this->description = $this->plant['description'];
             $this->season =  $this->plant['season'];
         }
@@ -124,22 +125,22 @@ class Create extends Component
 
         $this->validate([
             'displayImage' => 'required|array',
-            'species' => 'nullable|string',
+            'species' => 'nullable|array',
             'name' => 'required|string|min:1|max:255',
             'description' => 'nullable|string|max:10000',
         ]);
 
         try{
 
-            
+            $species = Species::where('scientific_name','LIKE','%'.$this->species[0].'%')->first();
+
             MyPlant::where('user_id',Auth::id())->where('plant_id',$this->plant['plant_id'])->update([
+                'common_name' => $species->common_name,
                 'species' => $this->species,
                 'season' => $this->season,
                 'name' => $this->name,
                 'description' => $this->description,
             ]);
-
-
 
             $directory = Storage::disk('public')->files($this->plant['image']);
 
@@ -229,7 +230,7 @@ class Create extends Component
 
         $this->validate([
             'displayImage' => 'required|array',
-            'species' => 'nullable|string',
+            'species' => 'nullable|array',
             'name' => 'required|string|min:1|max:255',
             'description' => 'nullable|string|max:10000',
         ]);
@@ -244,15 +245,18 @@ class Create extends Component
                 $random = random_id('i-');
 
                 // Move to new temporary folder
-                Storage::disk('public')->move('livewire-tmp/iq-'.$image['original_name'],'my-plant/'.Auth::id().'/'.$plant_id.'/thumbnail/'.$random.'.jpg');
+                Storage::disk('public')->move('livewire-tmp/iq-'.$image['original_name'],'my-plant/'.Auth::id().'/'.$plant_id.'/medium/'.$random.'.jpg');
 
-                Storage::disk('public')->move('livewire-tmp/'.$image['name'],'my-plant/'.Auth::id().'/'.$plant_id.'/'.$random.'.jpg');
+                Storage::disk('public')->move('livewire-tmp/'.$image['name'],'my-plant/'.Auth::id().'/'.$plant_id.'/og/'.$random.'.jpg');
 
             }
+
+            $species = Species::where('scientific_name','LIKE','%'.$this->species[0].'%')->first();
 
             $plant = new MyPlant;
             $plant->user_id = Auth::id();
             $plant->plant_id = $plant_id;
+            $plant->common_name = $species->common_name;
             $plant->species = $this->species;
             $plant->season = $this->season;
             $plant->name = $this->name;
@@ -270,7 +274,7 @@ class Create extends Component
             return redirect('user/my-plants');
 
         }catch(\Exception $e){
-            dd($e);
+            // dd($e);
             $this->notification([
                 'title'       => 'There Was An Error',
                 'description' => 'The info you have provided for your plant could not be saved. Please try again or contact us',

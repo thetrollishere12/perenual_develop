@@ -24,7 +24,7 @@ class AddCardModal extends Component
      */
     public function render()
     {   
-        // $country = json_decode(File::get(public_path('storage/json/country.json')), true); 
+        // $country =json_decode(Storage::disk('local')->get('json/country.json'), true);
         return view('components.add-card-modal');
     }
 }

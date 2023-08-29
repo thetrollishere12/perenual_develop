@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Subset;
 
+use Illuminate\Contracts\Encryption\Encrypter;
 
 	function random_id($prefix){
 
@@ -17,7 +18,7 @@ use App\Models\Subset;
 
 	function country_string_to_code($string){
 
-		$json = json_decode(File::get(public_path('storage/json/backup.json')), true); 
+		$json = json_decode(Storage::disk('local')->get('json/backup.json'), true);
 
 		foreach($json as $country){
 	
@@ -33,7 +34,7 @@ use App\Models\Subset;
 
 	function country_code_to_string($code){
 
-		$json = json_decode(File::get(public_path('storage/json/backup.json')), true); 
+		$json = json_decode(Storage::disk('local')->get('json/backup.json'), true);
 
 		foreach($json as $country){
 	
@@ -48,7 +49,7 @@ use App\Models\Subset;
 	}
 
 	function country_code_to_currency($code){
-		$json = json_decode(File::get(public_path('storage/json/country.json')), true); 
+		$json = json_decode(Storage::disk('local')->get('json/country.json'), true);
 
 		foreach($json as $country){
 	

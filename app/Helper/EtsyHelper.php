@@ -4,30 +4,51 @@ use Illuminate\Support\Facades\Http;
 use App\Models\EtsyAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Utils;
+
+use App\Models\ShippingDomestic;
+use App\Models\ShippingInternational;
+
 function etsy_token_refresh($id){
 
-    $account = EtsyAccount::where('parent_email',auth()->user()->email)->where('etsy_shop_id',$id)->get()->first();
+    try{
 
-    if (!is_null($account) > 0) {
+        $account = EtsyAccount::where('userId',auth()->user()->id)->where('shop_id',$id)->get()->first();
 
-        $response = Http::asForm()->post('https://api.etsy.com/v3/public/oauth/token',[
-            'grant_type'=>'refresh_token',
-            'client_id'=>env('ETSY_KEYSTRING'),
-            'refresh_token'=>$account->refresh_token
-        ]);
+        if (!is_null($account) > 0) {
 
-        $new_oauth = json_decode($response->getBody());
+            $response = Http::asForm()->post('https://api.etsy.com/v3/public/oauth/token',[
+                'grant_type'=>'refresh_token',
+                'client_id'=>env('ETSY_KEYSTRING'),
+                'refresh_token'=>$account->refresh_token
+            ]);
 
-        $account->update([
-            'bearer_token'=>$new_oauth->access_token,
-            'refresh_token'=>$new_oauth->refresh_token
-        ]);
+            $new_oauth = json_decode($response->getBody());
 
-        return $new_oauth->access_token;
+            $account->update([
+                'bearer_token'=>$new_oauth->access_token,
+                'refresh_token'=>$new_oauth->refresh_token
+            ]);
 
-    }else{
-        return "account doesnt exist";
+            return $new_oauth->access_token;
+
+        }else{
+            return "account doesnt exist";
+        }
+
+    }catch(\Exception $e){
+
     }
+
+}
+
+function etsy_get_user_addresses($token){
+
+    $response = Http::withHeaders([
+        'x-api-key'=>env('ETSY_KEYSTRING'),
+        'authorization'=>'Bearer '.$token
+    ])->get('https://openapi.etsy.com/v3/application/user/addresses');
+
+    return json_decode($response->getBody());
 
 }
 
@@ -50,10 +71,20 @@ function etsy_get_store($id){
     return json_decode($response->getBody());
 }
 
-function etsy_get_shop_by_userid($id){
+function etsy_get_shop_return_policies($token,$id){
+    $response = Http::withHeaders([
+        'x-api-key'=>env('ETSY_KEYSTRING'),
+        'authorization'=>'Bearer '.$token
+    ])->get('https://openapi.etsy.com/v3/application/shops/'.$id.'/policies/return');
+
+    return json_decode($response->getBody());
+}
+
+function etsy_get_shop_by_userid($token,$id){
 
     $response = Http::withHeaders([
-        'x-api-key'=>env('ETSY_KEYSTRING')
+        'x-api-key'=>env('ETSY_KEYSTRING'),
+        'authorization'=>'Bearer '.$token
     ])->get('https://openapi.etsy.com/v3/application/users/'.$id.'/shops');
 
     return json_decode($response->getBody());
@@ -263,4 +294,161 @@ function etsy_findAllListingsActive($param){
     ->get('https://openapi.etsy.com/v3/application/listings/active?keyword=aloe vera&shop_location=CA');
     
     return json_decode($response->getBody());
+}
+
+function etsy_user_me($param){
+    $response = Http::withHeaders([
+        'x-api-key'=>env('ETSY_KEYSTRING')
+    ])
+    ->get('https://openapi.etsy.com/v3/application/users/me');
+    
+    return json_decode($response->getBody());
+}
+
+// Listing Product
+
+function etsy_get_listing($listing_id){
+
+    $response = Http::withHeaders([
+        'x-api-key'=>env('ETSY_KEYSTRING')
+    ])
+    ->get('https://openapi.etsy.com/v3/application/listings/'.$listing_id,[
+        'includes' => 'Images,Shipping,Inventory,Videos'
+    ]);
+    
+    return json_decode($response->getBody());
+
+}
+
+// Shop Shipping Profile
+
+function etsy_get_shop_shipping_profile($token,$id){
+
+    $response = Http::withHeaders([
+        'x-api-key'=>env('ETSY_KEYSTRING'),
+        'authorization'=>'Bearer '.$token
+    ])->get('https://openapi.etsy.com/v3/application/shops/'.$id.'/shipping-profiles');
+
+    return json_decode($response->getBody());
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// Custom
+
+// Etsy Shipping
+
+function custom_etsy_extract_shipping(){
+
+        try{
+
+            $shop_id = Auth::user()->connected_etsy()->first()->shop_id;
+
+            $oauth = etsy_token_refresh($shop_id);
+
+            $shipping_profile = etsy_get_shop_shipping_profile($oauth,$shop_id);
+
+            foreach ($shipping_profile->results as $key => $value) {
+                
+                $count = ShippingDomestic::where('attributes','LIKE','%'.$value->shipping_profile_id.'%')->where('store_id',get_store()->first()->id)->count();
+
+                if ($count > 0) {
+                    continue;
+                }
+
+                foreach ($value->shipping_profile_destinations as $token => $shipping) {
+                 
+                    if ($shipping->origin_country_iso == $shipping->destination_country_iso) {
+                        
+                        $count = ShippingDomestic::where('attributes','LIKE','%'.$value->shipping_profile_id.'%')->where('store_id',get_store()->first()->id)->count();
+
+                        if ($count > 0) {
+                            continue;
+                        }
+
+                        $domestic = ShippingDomestic::create([
+                            'store_id' => get_store()->first()->id,
+                            'name' => $value->title,
+                            'origin' => $value->origin_country_iso,
+                            'processing' => $value->processing_days_display_label,
+                            'cost' => $shipping->primary_cost->amount/$shipping->primary_cost->divisor,
+                            'additional_cost' => $shipping->secondary_cost->amount/$shipping->secondary_cost->divisor,
+                            'free_shipping' => ($shipping->primary_cost->amount == 0 && $shipping->secondary_cost->amount == 0)?1:0,
+                            'delivery_from' => 7,
+                            'delivery_to' => 14,
+                            'attributes'=> [
+                                'source'=>[
+                                    'platform'=>'etsy',
+                                    'method'=>'import',
+                                    'shipping_profile_id'=> $value->shipping_profile_id,
+                                    'shipping_profile_destinations'=> $value->shipping_profile_destinations
+                                ]
+                            ],
+                        ]);
+                    }else{
+                       
+                        if ($shipping->destination_country_iso == "") {
+
+                            $domestic = ShippingDomestic::create([
+                                'store_id' => get_store()->first()->id,
+                                'name' => $value->title,
+                                'origin' => $value->origin_country_iso,
+                                'processing' => $value->processing_days_display_label,
+                                'cost' => $shipping->primary_cost->amount/$shipping->primary_cost->divisor,
+                                'additional_cost' => $shipping->secondary_cost->amount/$shipping->secondary_cost->divisor,
+                                'free_shipping' => ($shipping->primary_cost->amount == 0 && $shipping->secondary_cost->amount == 0)?1:0,
+                                'delivery_from' => 7,
+                                'delivery_to' => 14,
+                                'attributes'=> [
+                                    'source'=>[
+                                        'platform'=>'etsy',
+                                        'method'=>'import',
+                                        'shipping_profile_id'=> $value->shipping_profile_id,
+                                        'shipping_profile_destinations'=> $value->shipping_profile_destinations
+                                    ]
+                                ],
+                            ]);
+
+                            ShippingInternational::create([
+                                'shipping_id' => $domestic->id,
+                                'origin' => 'Everywhere',
+                                'cost' => $shipping->primary_cost->amount/$shipping->primary_cost->divisor,
+                                'additional_cost' => $shipping->secondary_cost->amount/$shipping->secondary_cost->divisor,
+                                'free_shipping' => ($shipping->primary_cost->amount == 0 && $shipping->secondary_cost->amount == 0)?1:0,
+                                'delivery_from' => 14,
+                                'delivery_to' => 28
+                            ]);
+                        }else{
+                            ShippingInternational::create([
+                                'shipping_id' => $domestic->id,
+                                'origin' => $shipping->destination_country_iso,
+                                'cost' => $shipping->primary_cost->amount/$shipping->primary_cost->divisor,
+                                'additional_cost' => $shipping->secondary_cost->amount/$shipping->secondary_cost->divisor,
+                                'free_shipping' => ($shipping->primary_cost->amount == 0 && $shipping->secondary_cost->amount == 0)?1:0,
+                                'delivery_from' => 14,
+                                'delivery_to' => 28
+                            ]);
+                        }
+
+                        
+                    }
+
+                }
+
+            }
+
+        }catch(\Exception $e){
+
+        }
+
 }

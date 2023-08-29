@@ -34,7 +34,8 @@ class SpeciesTropical extends Model
         'pest_susceptibility',
         'other_name',
         'propagation',
-        'image'
+        'image',
+        'description'
     ];
 
     protected $casts = [
@@ -45,6 +46,8 @@ class SpeciesTropical extends Model
         'scientific_name' => 'array',
         'propagation' => 'array',
         'origin' => 'array',
+        'sun_exposure'=>'array',
+        'attracts'=>'array'
     ];
     
 }

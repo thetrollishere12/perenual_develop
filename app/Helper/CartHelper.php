@@ -29,6 +29,29 @@ function conversion_product($base_currency,$quantity,$base_number,$currency){
 
 }
 
+// Eligable
+function product_eligability(){
+
+	$eligable = true;
+
+	foreach(session('cart.shopping_cart') as $sku => $cart) {
+
+        foreach($cart['list'] as $list){
+            if (isset($list['eligable']) && $list['eligable'] == false) {
+
+                $eligable = false;
+                $this->addError('shipping', 'Product '.strtoupper($list['product']->sku).' does not ship to '.country_code_to_string(session('cart.shipping.address.country')));
+                break;
+
+            }
+        }
+
+    }
+	
+    return $eligable;
+		
+}
+
 // Promo Code
 
 function apply_promo($code){
@@ -266,135 +289,161 @@ function revise_cart(){
 // Get shipping cost for shopping cart
 function shipping(){
 
-    $shipping_amount = 0;
-
-    // Estimate quantity and cost for product
-    foreach (session('cart.shopping_cart') as $sku => $cart) {
-        
-        $quantity = 0;
-
-        foreach ($cart['list'] as $l => $details){
-
-        	$type = "domestic";
-
-            $shipping = ShippingDomestic::where('id',$details['product']->shippingMethod)->whereIn('origin',[session('cart.address.country_code'),'Everywhere'])->get();
-
-            $cart['shipping']['method'] = [];
-
-            if ($shipping->count() == 0) {
-                
-            	$type = "international";
-
-                $shipping = ShippingInternational::where('shipping_id',$details['product']->shippingMethod)->whereIn('origin',[session('cart.address.country_code'),'Everywhere'])->get()->sortBy('cost');
-
-                if ($shipping->count() == 0) {
-                    
-                    $cart['list'][$l]['eligable'] = false;
-                    continue;
-
-                }
-            }
+    	$shipping_amount = 0;
 
 
-            $shipping = $shipping->first();
+    	if (session('cart.shipping.address.country_code')) {
+	    // Estimate quantity and cost for product
+	    foreach (session('cart.shopping_cart') as $sku => $cart) {
+	        
+	        $quantity = 0;
 
-            $cart['list'][$l]['eligable'] = true;
+	        foreach ($cart['list'] as $l => $details){
 
-            $cart['list'][$l]['shipping'] = [
-            	"id"=>$details['product']->shippingMethod,
-            	"type"=>$type,
-            	"quantity"=>$details['purchased_quantity'],
-            	"cost"=>$shipping->cost,
-            	"additional_cost"=>$shipping->additional_cost,
-            	"from"=>$shipping->delivery_from,
-            	"to"=>$shipping->delivery_to,
-            	"currency"=>$details['product']->currency,
-            ];
+	        	$type = "domestic";
 
-        }
+	            $shipping = ShippingDomestic::where('id',$details['product']->shippingMethod)->whereIn('origin',[session('cart.shipping.address.country_code'),'Everywhere'])->get();
 
-        session()->put('cart.shopping_cart.'.$sku, $cart);
+	            $cart['shipping']['method'] = [];
 
-    }
+	            if ($shipping->count() == 0) {
+	                
+	            	$type = "international";
 
-  
-    $array = [];
-    // calculate and finalize cost for store from product into array
-    foreach (session('cart.shopping_cart') as $sku => $cart) {
+	                $shipping = ShippingInternational::where('shipping_id',$details['product']->shippingMethod)->whereIn('origin',[session('cart.shipping.address.country_code'),'Everywhere'])->get()->sortBy('cost');
 
-	    foreach ($cart['list'] as $l => $details){
+	                if ($shipping->count() == 0) {
+	                    
+	                    $cart['list'][$l]['eligable'] = false;
+	                    continue;
 
-			if (isset($array[$details['shipping']['id']])) {
-				$array[$details['shipping']['id']]['purchased_quantity'] = $array[$details['shipping']['id']]['purchased_quantity'] + $details['purchased_quantity'];
-			}else{
-				$array[$details['shipping']['id']] = [
-					'store_id' => $sku,
-					'cost' => $details['shipping']['cost'],
-					'additional_cost' => $details['shipping']['additional_cost'],
-					'currency' => $details['shipping']['currency'],
-					'purchased_quantity' => $details['purchased_quantity']+0
-				];
-			}
+	                }
+	            }
+
+
+	            $shipping = $shipping->first();
+
+	            $cart['list'][$l]['eligable'] = true;
+
+	            $cart['list'][$l]['shipping'] = [
+	            	"id"=>$details['product']->shippingMethod,
+	            	"type"=>$type,
+	            	"quantity"=>$details['purchased_quantity'],
+	            	"cost"=>$shipping->cost,
+	            	"additional_cost"=>$shipping->additional_cost,
+	            	"from"=>$shipping->delivery_from,
+	            	"to"=>$shipping->delivery_to,
+	            	"currency"=>$details['product']->currency,
+	            ];
+
+	        }
+
+	        session()->put('cart.shopping_cart.'.$sku, $cart);
 
 	    }
 
-	}
-	
-	$shipping_amount = 0;
+	  
+	    $array = [];
+	    // calculate and finalize cost for store from product into array
+	    foreach (session('cart.shopping_cart') as $sku => $cart) {
 
-	foreach (session('cart.shopping_cart') as $sku => $cart) {
+		    foreach ($cart['list'] as $l => $details){
 
-    	$cart['shipping']['shipping_amount'] = 0;
-    	// finazlize cost for all product with same shipping for shop
-    	foreach ($array as $key => $shipping) {
+				if (isset($array[$details['shipping']['id']])) {
+					$array[$details['shipping']['id']]['purchased_quantity'] = $array[$details['shipping']['id']]['purchased_quantity'] + $details['purchased_quantity'];
+				}else{
+					$array[$details['shipping']['id']] = [
+						'store_id' => $sku,
+						'cost' => $details['shipping']['cost'],
+						'additional_cost' => $details['shipping']['additional_cost'],
+						'currency' => $details['shipping']['currency'],
+						'purchased_quantity' => $details['purchased_quantity']+0
+					];
+				}
 
-    		if ($shipping['store_id'] == $sku) {
-			
-    			$cart['shipping']['shipping_amount'] += $shipping['cost']+($shipping['additional_cost']*($shipping['purchased_quantity']-1));
-
-    		}
+		    }
 
 		}
+		
+		foreach (session('cart.shopping_cart') as $sku => $cart) {
 
-		if ($cart['shipping']['type'] == 'pickup' && env('LOCAL_PICKUP') == true) {
-			// If user picks pickup
-        	$cart['shipping']['convert_amount'] = 0.00;
-		}else{
+	    	$cart['shipping']['shipping_amount'] = 0;
+	    	// finazlize cost for all product with same shipping for shop
+	    	foreach ($array as $key => $shipping) {
+
+	    		if ($shipping['store_id'] == $sku) {
+				
+	    			$cart['shipping']['shipping_amount'] += $shipping['cost']+($shipping['additional_cost']*($shipping['purchased_quantity']-1));
+
+	    		}
+
+			}
+
 			// If user picks delivery
-        	$amount = conversion($shipping['currency'],$cart['shipping']['shipping_amount'],false);
+	        $amount = conversion($cart['shipping']['currency'],$cart['shipping']['shipping_amount'],false);
 
-        	$cart['shipping']['convert_amount'] = $amount;
+	        $cart['shipping']['convert_shipping_amount'] = $amount;
 
-        	$shipping_amount += $amount;
+			if ($cart['shipping']['type'] == 'pickup' && env('LOCAL_PICKUP') == true) {
+				// If user picks pickup
+	        	$cart['shipping']['convert_amount'] = 0.00;
+			}else{
+
+				$cart['shipping']['convert_amount'] = $amount;				
+				$shipping_amount += $amount;
+			}
+
+			session()->put('cart.shopping_cart.'.$sku, $cart);
+
 		}
 
-		session()->put('cart.shopping_cart.'.$sku, $cart);
-
+	    session()->put('cart.shipping.currency',current_currency_code());
+	    session()->put('cart.shipping.shipping_amount',$shipping_amount);
+		
 	}
 
-    session()->put('cart.shipping',[
-        "currency"=>current_currency_code(),
-        "shipping_amount"=>$shipping_amount
-    ]);
+	return $shipping_amount;
 
-    return $shipping_amount;
+}
+
+function has_shipping(){
+
+	$hasShipping = false;
+
+    foreach (session('cart.shopping_cart') as $sku => $cart) {
+            
+        foreach ($cart['shipping'] as $l => $details){
+
+            if (isset($details) && $details == 'shipping') {
+                $hasShipping = true;
+                break; // Exit the loop if shipping is found
+            }
+
+        }
+
+    }
+
+    return $hasShipping;
 
 }
 
 function shipping_address(){
 
-    $address = [
-        "address"=>[
-            'city'=>session('cart.address.city'),
-            'country'=>session('cart.address.country_code'),
-            'line1'=>session('cart.address.line1'),
-            'line2'=>session('cart.address.line2'),
-            'postal_code'=>session('cart.address.zipcode'),
-            'state'=>session('cart.address.spr'),
-        ],
-        'name'=>session('cart.address.contact_name'),
-        'email'=>session('cart.address.email_address'),
-    ];
+	$cart = session('checkoutCart');
+
+	$address = [
+	    "address"=>[
+	        'city' => $cart['shipping']['address']['city'],
+	        'country' => $cart['shipping']['address']['country_code'],
+	        'line1' => $cart['shipping']['address']['line1'],
+	        'line2' => $cart['shipping']['address']['line2'],
+	        'postal_code' => $cart['shipping']['address']['zipcode'],
+	        'state' => $cart['shipping']['address']['spr'],
+	    ],
+	    'name' => $cart['user']['contact_name'],
+	    'email' => $cart['user']['email_address'],
+	    'phone' => $cart['user']['phone'],
+	];
 
     return $address;
 

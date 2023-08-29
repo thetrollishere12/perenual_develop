@@ -3,7 +3,7 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
-use File;
+use Storage;
 
 class BillingAddress extends Component
 {
@@ -24,7 +24,7 @@ class BillingAddress extends Component
      */
     public function render()
     {
-        $country = json_decode(File::get(public_path('storage/json/country.json')), true);
+        $country = json_decode(Storage::disk('local')->get('json/country.json'), true);
         return view('components.billing-address',['json'=>$country]);
     }
 }

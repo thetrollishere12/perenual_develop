@@ -20,23 +20,27 @@ return new class extends Migration
 
             $table->text('scientific_name');
 
-            $table->longText('watering')->nullable();
+            $table->integer('seen')->default(0);
+            
+            $table->integer('helpful')->default(0);
 
-            $table->longText('pruning')->nullable();
+            // $table->longText('watering')->nullable();
 
-            $table->longText('sunlight')->nullable();
+            // $table->longText('pruning')->nullable();
 
-            $table->longText('fertilizer')->nullable();
+            // $table->longText('sunlight')->nullable();
 
-            $table->longText('toxic')->nullable();
+            // $table->longText('fertilizer')->nullable();
 
-            $table->longText('maintenance')->nullable();
+            // $table->longText('toxic')->nullable();
 
-            $table->longText('growth_rate')->nullable();
+            // $table->longText('maintenance')->nullable();
 
-            $table->longText('fruits')->nullable();
+            // $table->longText('growth_rate')->nullable();
 
-            $table->longText('hardiness')->nullable();
+            // $table->longText('fruits')->nullable();
+
+            // $table->longText('hardiness')->nullable();
 
             $table->timestamps();
         });

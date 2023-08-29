@@ -28,8 +28,8 @@ class FaqListLayout extends Table
     {
         return [
 
-            TD::make('question', 'Question'),
-            TD::make('answer', 'Answer'),
+            TD::make('question', 'Question')->width('300px'),
+            TD::make('answer', 'Answer')->width('300px'),
             TD::make('seen', 'Seen'),
 
             TD::make('helpful', 'Helpful'),

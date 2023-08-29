@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'validPayout' => \App\Http\Middleware\ValidPayout::class,
         'validNewPayout' => \App\Http\Middleware\ValidNewPayout::class,
         'validShoppingCart' => \App\Http\Middleware\ValidShoppingCart::class,
+        'access' => \Orchid\Platform\Http\Middleware\Access::class,
     ];
 }

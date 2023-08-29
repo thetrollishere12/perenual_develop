@@ -7,7 +7,7 @@ use Vildanbina\LivewireWizard\Components\Step;
 class Indoor extends Step
 {
     // Step view located at resources/views/steps/general.blade.php 
-    protected string $view = 'steps.indoor';
+    protected string $view = 'survey.steps.indoor';
 
     /*
      * Initialize step fields

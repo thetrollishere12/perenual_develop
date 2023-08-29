@@ -17,14 +17,15 @@ return new class extends Migration
             $table->id();
             $table->string('platform')->nullable();
             $table->string('name')->nullable();
-            $table->integer('rating')->nullable();
-            $table->decimal('review', 65,2)->nullable();
+            $table->string('rating')->nullable();
+            $table->string('review', 65,2)->nullable();
 
             $table->text('hours')->nullable();
             $table->text('social_media')->nullable();
             $table->string('website')->nullable();
             $table->string('number')->nullable();
             $table->string('country')->nullable();
+            $table->string('province_county_state')->nullable();
             $table->string('city')->nullable();
             $table->string('address')->nullable();
             $table->boolean('checked')->default(0);

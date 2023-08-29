@@ -31,8 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->namespace($this->namespace)
+            Route::namespace($this->namespace)
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
@@ -49,8 +48,47 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        RateLimiter::for('api-request', function (Request $request) {
+
+            $check = api_key_check($request->key);
+
+            if (!$check) {
+                return response()->json(['message' => 'Missing/Issue with API Key. Please try again or contact '.env("MAIL_CONTACT_ADDRESS")],404);
+            }
+
+            $subscription = is_subscribed_type($check->user_id,'subscription');
+
+            $details = subscription_details((($subscription->count() > 0) ? $subscription->first()->name : null),'subscription');
+
+            return $subscription->count() > 0
+            ? Limit::perMinute($details['bandwidth']['limit'])->by($details['name']."-".$check->user_id)->response(function(Request $request, array $headers){
+                $headers['X-Response'] = "Surpassed API Rate Limit";
+                return response($headers, 429);
+            })
+            : Limit::perDay($details['bandwidth']['limit'])->by($details['name']."-".$check->user_id)->response(function(Request $request, array $headers){
+                $headers['X-Response'] = "Surpassed API Rate Limit. Upgrade To Increase Rate";
+                return response($headers, 429);
+            });
+
+        });
+
+
+
+        RateLimiter::for('api-request-identify', function (Request $request) {
+
+            $check = api_key_check($request->key);
+
+            if (!$check) {
+                return response()->json(['message' => 'Missing/Issue with API Key. Please try again or contact '.env("MAIL_CONTACT_ADDRESS")],404);
+            }
+
+        });
+
+
     }
 }

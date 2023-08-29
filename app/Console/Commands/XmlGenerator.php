@@ -10,6 +10,14 @@ use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Store;
 
+use App\Models\Species;
+use App\Models\ArticleFaq;
+use App\Models\SpeciesArticleSection;
+use App\Models\SpeciesIssue;
+use App\Models\SpeciesCareGuide;
+
+
+
 class XmlGenerator extends Command
 {
     /**
@@ -55,7 +63,7 @@ class XmlGenerator extends Command
             ->setPriority(0.7));
         }
 
-        $sitemap->writeToDisk('public', 'sitemap/products.xml');
+        $sitemap->writeToDisk('public', 'sitemap/products-v2.xml');
 
 
 
@@ -63,14 +71,105 @@ class XmlGenerator extends Command
 
         $sitemap = Sitemap::create();
 
-        foreach ($db as $store) {
-            $sitemap->add(Url::create('/shop/profile/'.$store->id.'/'.$store->name)
+        foreach ($db as $query) {
+            $sitemap->add(Url::create('/shop/profile/'.$query->id.'/'.$query->name)
             ->setLastModificationDate(Carbon::yesterday())
             ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
             ->setPriority(0.7));
         }
 
-        $sitemap->writeToDisk('public', 'sitemap/stores.xml');
+        $sitemap->writeToDisk('public', 'sitemap/stores-v2.xml');
+
+
+
+
+        $db = Species::all();
+
+        $sitemap = Sitemap::create();
+
+        foreach ($db as $query) {
+            $sitemap->add(Url::create('/plant-species-database-search-finder/species/'.$query->id)
+            ->setLastModificationDate(Carbon::yesterday())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+            ->setPriority(0.7));
+        }
+
+        $sitemap->writeToDisk('public', 'sitemap/species-v2.xml');
+
+
+
+
+
+        $db = SpeciesCareGuide::all();
+
+        $sitemap = Sitemap::create();
+
+
+        foreach ($db as $query) {
+            $sitemap->add(Url::create('/plant-species-database-search-finder/species/'.$query->id.'/guide')
+            ->setLastModificationDate(Carbon::yesterday())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+            ->setPriority(0.7));
+        }
+
+        $sitemap->writeToDisk('public', 'sitemap/species_guide.xml');
+
+
+
+
+
+        // $db = ArticleFaq::all();
+
+        // $sitemap = Sitemap::create();
+
+        // foreach ($db as $query) {
+        //     $sitemap->add(Url::create('/article-faq-finder/question/'.$query->id)
+        //     ->setLastModificationDate(Carbon::yesterday())
+        //     ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        //     ->setPriority(0.7));
+        // }
+
+        // $sitemap->writeToDisk('public', 'sitemap/article_faq.xml');
+
+
+
+        $db = SpeciesIssue::all();
+
+        $sitemap = Sitemap::create();
+
+        foreach ($db as $query) {
+            $sitemap->add(Url::create('/pest-disease-search-finder/pest-disease/'.$query->id)
+            ->setLastModificationDate(Carbon::yesterday())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+            ->setPriority(0.7));
+        }
+
+        $sitemap->writeToDisk('public', 'sitemap/pest_disease.xml');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

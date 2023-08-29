@@ -18,7 +18,7 @@ class CreateSpeciesTable extends Migration
 
             $table->string('common_name')->nullable();
 
-            $table->text('scientific_name');
+            $table->text('scientific_name')->unique()->nullable();
 
             $table->text('other_name')->nullable();
 
@@ -64,7 +64,7 @@ class CreateSpeciesTable extends Migration
 
             $table->string('harvest_season')->nullable();
 
-            $table->boolean('edible')->default(0);
+            $table->boolean('edible_fruit')->default(0);
 
             $table->boolean('leaf')->default(0);
 
